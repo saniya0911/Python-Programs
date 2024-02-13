@@ -43,6 +43,6 @@ if(user_choice<3) and (user_choice>=0):
   elif(user_choice==comp_choice+1) or (user_choice==comp_choice-2):
     print("You win!")
   else:
-    print("Tie!")
+    print("Draw!")
 else:
     print("You chose an invalid number. You lose!")
