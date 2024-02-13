@@ -5,7 +5,7 @@ if(dir.lower()=="right"):
 else:
     mod=input("Do you wanna swim or do you wanna wait for a boat ?")
     if(mod.lower()=="swim"):
-        print("Game Over!")
+        print("Game Over")
     else:
         door=input("Red door or Blue door or Yellow door ?")
         if(door.lower()=="red") or (door.lower=="yellow"):
