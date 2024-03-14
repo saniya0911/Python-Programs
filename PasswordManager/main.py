@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import random
 import pyperclip
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -33,18 +34,51 @@ def add_clicked():
     website = website_entry.get()
     email = username_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+    }
 
     if len(website)==0 or len(password)==0:
         messagebox.showinfo(title="Oops!", message="Please make sure you haven't left any fields empty.")
     else:
         is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} \nPassword: {password} \nIs it okay to save ?")
         if is_ok:    
-            f = open("myprog/Projects/PasswordManager/data.txt", "a")
-            f.write(f"{website} | {email} | {password}\n")
-            f.close()
-            messagebox.showinfo(title="Success", message="Your details were saved.")
-            website_entry.delete(0,END)
-            password_entry.delete(0,END)
+            #reading old data
+            try:
+                with open("myprog/Projects/PasswordManager/data.json", "r") as f:
+                    data = json.load(f)
+            except FileNotFoundError:
+                with open("myprog/Projects/PasswordManager/data.json", "w") as f:
+                    json.dump(new_data, f, indent=4)
+            else:
+                #Updating old data with new data
+                data.update(new_data)
+                #Saving new data
+                with open("myprog/Projects/PasswordManager/data.json","w") as f:
+                    json.dump(data, f, indent=4)
+            finally:
+                messagebox.showinfo(title="Success", message="Your details were saved.")
+                website_entry.delete(0,END)
+                password_entry.delete(0,END)
+
+# ---------------------------- Search ------------------------------- #
+                
+def search_file():
+    website = website_entry.get()
+    try:
+        with open("myprog/Projects/PasswordManager/data.json", "r") as f:
+            data = json.load(f)
+            email = data[website]["email"]
+            password = data[website]["password"]
+        messagebox.showinfo(title=website, message=f"Email: {email} \nPassword: {password}")
+    except:
+        messagebox.showerror(title="Error", message=f"{website} doesn't exist.")
+    finally:
+        website_entry.delete(0,END)
+        password_entry.delete(0,END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -67,12 +101,12 @@ password_label = Label(text="Password:")
 password_label.grid(row=3, column=0)
 
 
-website_entry = Entry(width=50)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=32)
+website_entry.grid(row=1, column=1)
 website_entry.focus()
 
 username_entry = Entry(width=50)
-username_entry.insert(END,"ssaniya.1109@gmail.com")
+username_entry.insert(END,"ssaniya.123@gmail.com")
 username_entry.grid(row=2, column=1, columnspan=2)
 
 password_entry = Entry(width=32)
@@ -83,5 +117,8 @@ generate_password.grid(row=3, column=2)
 
 add = Button(text="Add", width=42, command=add_clicked)
 add.grid(row=4, column=1, columnspan=2)
+
+search = Button(text="Search", width=14, command=search_file)
+search.grid(row=1, column=2)
 
 window.mainloop()
