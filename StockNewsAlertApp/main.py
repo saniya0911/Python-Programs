@@ -35,13 +35,13 @@ if(difference_per>5):
         if (yesterday_cp-day_before_yesterday_cp)>0:
             message = client.messages.create(
                 body=f"{STOCK_NAME}: 🔺{difference_per}% \n {article}",
-                from_="+15643330285",
-                to="+919511179673"
+                from_=FROM_NUMBER,
+                to=TO_NUMBER
             )
         else:
             message = client.messages.create(
                 body=f"{STOCK_NAME}: 🔻{difference_per}% \n {article}",
-                from_="+15643330285",
-                to="+919511179673"
+                from_=FROM_NUMBER,
+                to=TO_NUMBER
             )
 
